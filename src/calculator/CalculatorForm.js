@@ -1,25 +1,27 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import NumberInput from './NumberInput';
 import Select from 'react-select';
 import Result from './Result';
 
-export default class CalculatorForm extends Component {
-	state = {
-		selectedOption: '--Vyberte operaci--',
-		result: null,
-	};
-	options = [
+const CalculatorForm = (props) => {
+	const [selectedOptionState, setSelectedOptionState] = useState({
+		selectedOption: {
+			value: '--Vyberte operaci--',
+			label: '--Vyberte operaci--',
+		},
+	});
+	const [resultState, setResultState] = useState({ result: null });
+
+	const options = [
 		{ value: 'ADD', label: 'Sčítání' },
 		{ value: 'SUBTRACT', label: 'Odčítání' },
 		{ value: 'MULTIPLY', label: 'Násobení' },
 		{ value: 'DIVIDE', label: 'Dělení' },
 	];
 
-	calculate = () => {
-		const { x, y } = this.props;
-		const { selectedOption } = this.state;
-
-		switch (selectedOption.value) {
+	let calculate = () => {
+		const { x, y } = props;
+		switch (selectedOptionState.selectedOptionState.value) {
 			case 'ADD':
 				return parseFloat(x) + parseFloat(y);
 			case 'SUBTRACT':
@@ -33,42 +35,39 @@ export default class CalculatorForm extends Component {
 		}
 	};
 
-	handleSubmit = (event, result) => {
+	const handleSubmit = (event) => {
 		event.preventDefault();
-		result = this.calculate();
-		this.setState({ result });
+		const result = calculate();
+		setResultState({ result });
 	};
-	handleChange = (selectedOption) => {
-		this.setState({ selectedOption }, () =>
-			console.log(`Option selected:`, this.state.selectedOption),
-		);
+	const handleChange = (selectedOptionState) => {
+		setSelectedOptionState({ selectedOptionState });
 	};
+	return (
+		<div>
+			<form className="CalculatorForm" onSubmit={handleSubmit}>
+				<NumberInput
+					OnChange={props.xOnChange}
+					name="x"
+					label="První číslo:"
+					value={props.x}
+				/>
+				<NumberInput
+					OnChange={props.yOnChange}
+					name="y"
+					label="Druhé číslo:"
+					value={props.y}
+				/>
+				<Select
+					onChange={handleChange}
+					value={selectedOptionState.value}
+					options={options}
+				/>
+				<button type="submit">Spočítej</button>
+			</form>
+			<Result value={resultState.result} />
+		</div>
+	);
+};
 
-	render() {
-		return (
-			<div>
-				<form className="CalculatorForm" onSubmit={this.handleSubmit}>
-					<NumberInput
-						OnChange={this.props.xOnChange}
-						name="x"
-						label="První číslo:"
-						value={this.props.x}
-					/>
-					<NumberInput
-						OnChange={this.props.yOnChange}
-						name="y"
-						label="Druhé číslo:"
-						value={this.props.y}
-					/>
-					<Select
-						onChange={this.handleChange}
-						value={this.state.selectedOption}
-						options={this.options}
-					/>
-					<button type="submit">Spočítej</button>
-				</form>
-				<Result value={this.state.result} />
-			</div>
-		);
-	}
-}
+export default CalculatorForm;

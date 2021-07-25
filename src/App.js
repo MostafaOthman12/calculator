@@ -1,35 +1,31 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import CalculatorForm from './calculator/CalculatorForm';
 import './App.css';
 
-export default class App extends Component {
-	state = {
-		x: 0,
-		y: 0,
-		title: 'React kalkulačka',
+const App = () => {
+	const [titleState, setTitleState] = useState({ title: 'React kalkulačka' });
+	const [xState, setXState] = useState({ x: 0 });
+	const [yState, setyState] = useState({ y: 0 });
+
+	const inputXonchange = (event) => {
+		setXState({ x: event.target.value });
 	};
 
-	inputXonchange = (event) => {
-		this.setState({ x: event.target.value });
+	const inputYonchange = (event) => {
+		setyState({ y: event.target.value });
 	};
 
-	inputYonchange = (event) => {
-		this.setState({ y: event.target.value });
-	};
+	return (
+		<div className="App">
+			<h1>{titleState}</h1>
+			<CalculatorForm
+				xOnChange={inputXonchange}
+				yOnChange={inputYonchange}
+				x={xState}
+				y={yState}
+			/>
+		</div>
+	);
+};
 
-	render() {
-		let { x, y, operation } = this.state;
-		return (
-			<div className="App">
-				<h1>{this.state.title}</h1>
-				<CalculatorForm
-					onSubmit={this.handleSubmit}
-					xOnChange={this.inputXonchange}
-					yOnChange={this.inputYonchange}
-					x={this.state.x}
-					y={this.state.y}
-				/>
-			</div>
-		);
-	}
-}
+export default App;

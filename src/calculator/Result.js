@@ -1,10 +1,10 @@
-import React, { Component } from "react";
+import React from 'react';
 
-export default class Result extends Component {
-  render() {
-    const result = this.props.value;
-    if (result || result === 0)
-      return <div className="Result">Výsledek je: {result}</div>;
-    else return null;
-  }
-}
+const Result = (props) => {
+	const result = props.value;
+	if (result || result === 0)
+		return <div className="Result">Výsledek je: {result}</div>;
+	else return null;
+};
+
+export default Result;
